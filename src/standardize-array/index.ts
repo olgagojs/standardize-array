@@ -49,13 +49,16 @@ export function standardizeArray(_options: any): Rule {
 
 
 function handleFileEntry(fileEntry: FileEntry) {
-    const moduleText = fileEntry.content.toString();
+    let moduleText = fileEntry.content.toString();
     let replaceModule = '';
     while (moduleText.indexOf('Array<') !== -1) {
         const beginText = moduleText.slice(moduleText.indexOf('Array<'));
         if (beginText.indexOf('>') !== -1) {
             const searchTextArray = beginText.slice(0, beginText.indexOf('>') + 1);
-            const typeText = searchTextArray.replace('Array<', '').replace('>', '');
+            let typeText = searchTextArray.replace('Array<', '').replace('>', '');
+            if (typeText.indexOf('|') !== -1) {
+                typeText = `(${typeText})`;
+            }
             const replaceText = `${typeText}[]`;
             replaceModule = moduleText.replace(searchTextArray, replaceText);
             // console.log('Before: ');
