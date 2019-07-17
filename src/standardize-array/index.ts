@@ -31,8 +31,8 @@ export function standardizeArray(_options: any): Rule {
                         if (fs.existsSync(pathFile)) {
                             const replaceText = handleFileEntry(fileEntry);
                             if (replaceText) {
-                                console.log(replaceText);
-                                console.log(_options);
+                                // console.log(replaceText);
+                                // console.log(_options);
                                 fs.writeFileSync(path.join(urlText, fileEntry.path), replaceText);
                                 console.log('write', pathFile);
                             }
