@@ -58,9 +58,8 @@ function handleFileEntry(fileEntry: FileEntry) {
             //if Array<T>, timestampField: string): Map<string, Array<T>>
             const indexNextOpenBracket = arr.slice(arr.indexOf('<') + 1).indexOf('<');
             const indexCloseBracket = arr.indexOf('>');
-            if(indexNextOpenBracket > indexCloseBracket) {
+            if (indexNextOpenBracket > indexCloseBracket) {
                 arr = arr.slice(0, indexCloseBracket + 1);
-                console.log('closer index', arr);
             }
 
             //if Array<string>>
@@ -73,7 +72,7 @@ function handleFileEntry(fileEntry: FileEntry) {
             //handle inner data in array
             let typeArr = arr.slice(6, arr.length - 1);
             if (arr.indexOf('|') !== -1) {
-               typeArr = `(${typeArr})`;
+                typeArr = `(${typeArr})`;
             }
             moduleText = moduleText.replace(arr, `${typeArr}[]`);
         }
