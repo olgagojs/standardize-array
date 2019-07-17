@@ -45,7 +45,7 @@ export function standardizeArray(_options: any): Rule {
     };
 }
 
-const REGEXP_ARRAY = /\Array<.*\>/g;
+const REGEXP_ARRAY = /\bArray<.*\>/g;
 
 function handleFileEntryByRecursion(fileEntry: FileEntry) {
     //BEFORE: export const arr5: Array<Array<Type<string>>> = [];
