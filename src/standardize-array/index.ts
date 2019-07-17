@@ -17,7 +17,7 @@ import * as fs from 'fs';
 export function standardizeArray(_options: any): Rule {
     return (tree: Tree, _context: SchematicContext) => {
         if (!_options.path) {
-            console.log('Required field path is undefined');
+            console.log('Required options field "path" is undefined');
             return tree;
         }
         const urlText = normalize(path.join(__dirname, _options.path));
@@ -31,8 +31,6 @@ export function standardizeArray(_options: any): Rule {
                         if (fs.existsSync(pathFile)) {
                             const replaceText = handleFileEntry(fileEntry);
                             if (replaceText) {
-                                // console.log(replaceText);
-                                // console.log(_options);
                                 fs.writeFileSync(path.join(urlText, fileEntry.path), replaceText);
                                 console.log('write', pathFile);
                             }
@@ -47,22 +45,21 @@ export function standardizeArray(_options: any): Rule {
     };
 }
 
-
 function handleFileEntry(fileEntry: FileEntry) {
+    //before: export const arr5: Array<Array<Type<string>>> = [];
     let moduleText = fileEntry.content.toString();
     let replaceModule = '';
-    while (moduleText.indexOf('Array<') !== -1) {
-        const beginText = moduleText.slice(moduleText.indexOf('Array<'));
-        if (beginText.indexOf('>') !== -1) {
-            const searchTextArray = beginText.slice(0, beginText.indexOf('>') + 1);
-            let typeText = searchTextArray.replace('Array<', '').replace('>', '');
-            if (typeText.indexOf('|') !== -1) {
-                typeText = `(${typeText})`;
-            }
-            const replaceText = `${typeText}[]`;
-            moduleText = moduleText.replace(searchTextArray, replaceText);
-            replaceModule = moduleText;
+
+    //regexp return: ['Array<Array<Type<string>>>']
+    let arrays = moduleText.match(/\Array<.*>\>/g) || [];
+    while (arrays.length) {
+        for (let arr of arrays) {
+            const typeArr = arr.slice(6, arr.length - 1);
+            moduleText = moduleText.replace(arr, `${typeArr}[]`);
         }
+        arrays = moduleText.match(/\Array<.*>\>/g) || [];
+        replaceModule = moduleText;
     }
+    // after: 'Type<string>[][]'
     return replaceModule;
 }
