@@ -51,17 +51,17 @@ export function standardizeArray(_options: any): Rule {
 function handleFileEntry(fileEntry: FileEntry) {
     const moduleText = fileEntry.content.toString();
     let replaceModule = '';
-    if (moduleText.indexOf('Array<') !== -1) {
+    while (moduleText.indexOf('Array<') !== -1) {
         const beginText = moduleText.slice(moduleText.indexOf('Array<'));
         if (beginText.indexOf('>') !== -1) {
             const searchTextArray = beginText.slice(0, beginText.indexOf('>') + 1);
             const typeText = searchTextArray.replace('Array<', '').replace('>', '');
             const replaceText = `${typeText}[]`;
             replaceModule = moduleText.replace(searchTextArray, replaceText);
-            console.log('Before: ');
-            console.log(moduleText);
-            console.log('After: ');
-            console.log(replaceModule);
+            // console.log('Before: ');
+            // console.log(moduleText);
+            // console.log('After: ');
+            // console.log(replaceModule);
         }
     }
     return replaceModule;
