@@ -30,3 +30,11 @@ const suitableLocales = [].reduce<any>((acc: string[][], locale: string) => {
     return acc;
 }, []);
 console.log('suitableLocales', suitableLocales);
+
+const social_settings: Array<{
+    description?: string,
+    image?: string,
+    title?: string,
+    type?: string,
+}> = [{}];
+console.log(social_settings);
