@@ -20,3 +20,13 @@ export function groupByDay<T>(data: Array<T>, timestampField: string): Map<strin
     }
     return resultMap;
 }
+
+// Flags for lang switcher
+const suitableLocales = [].reduce<any>((acc: Array<Array<string>>, locale: string) => {
+    const countryCode = locale.split('_')[1] || '';
+    if (countryCode.length === 2) {
+        acc.push([locale, `flags/${countryCode}.svg`]);
+    }
+    return acc;
+}, []);
+console.log('suitableLocales', suitableLocales);
