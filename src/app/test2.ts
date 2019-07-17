@@ -1,16 +1,40 @@
 import { Type } from '@angular/core';
 
-export const arr1: number[] = [];
-console.log(arr1);
+export const arr5: Array<Array<Type<string>>> = [];
+export const rrr: Array<Type<string>> = [];
+export const www: Array<Type<string> | Type<number>> = [];
+export const ttt: Map<string, Array<string>> = new Map([['test', []]]);
 
-export const arr2: (string | number | boolean)[] = [];
-console.log(arr2);
+console.log(arr5, rrr, www, ttt);
 
-export const arr3: number[] = [];
-console.log(arr3);
+export function groupByDay<T>(data: Array<T>, timestampField: string): Map<string, Array<T>> {
+    const resultMap: Map<string, Array<T>> = new Map();
+    for (const item of data) {
+        const dateString = timestampField;
+        const dateGroup = resultMap.get(dateString);
+        if (dateGroup) {
+            dateGroup.push(item);
+        } else {
+            resultMap.set(dateString, [item]);
+        }
+    }
+    return resultMap;
+}
 
-export const arr4: Type<number>[] = [];
-console.log(arr4);
+// Flags for lang switcher
+const suitableLocales = [].reduce<any>((acc: Array<Array<string>>, locale: string) => {
+    const countryCode = locale.split('_')[1] || '';
+    if (countryCode.length === 2) {
+        acc.push([locale, `flags/${countryCode}.svg`]);
+    }
+    return acc;
+}, []);
+console.log('suitableLocales', suitableLocales);
 
-export const arr5: Type<number>[][] = [];
-console.log(arr5);
+const social_settings: Array<{
+    description?: string,
+    image?: string,
+    title?: string,
+    type?: string,
+}> = [{}];
+console.log(social_settings);
