@@ -54,7 +54,17 @@ function handleFileEntry(fileEntry: FileEntry) {
     let arrays = moduleText.match(/\Array<.*>\>/g) || [];
     while (arrays.length) {
         for (let arr of arrays) {
-            const typeArr = arr.slice(6, arr.length - 1);
+            const firstBrackets = arr.split('<').length - 1;
+            const lastBrackets = arr.split('>').length - 1;
+            if (firstBrackets < lastBrackets) {
+                console.log('more brackets1', arr);
+                arr = arr.slice(0, arr.length - (lastBrackets - firstBrackets));
+                console.log('more brackets2', arr);
+            }
+            let typeArr = arr.slice(6, arr.length - 1);
+            if (arr.indexOf('|') !== -1) {
+               typeArr = `(${typeArr})`;
+            }
             moduleText = moduleText.replace(arr, `${typeArr}[]`);
         }
         arrays = moduleText.match(/\Array<.*>\>/g) || [];
