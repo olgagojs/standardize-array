@@ -25,7 +25,7 @@ export function standardizeArray(_options: any): Rule {
             url(urlText), [
                 template({ ..._options }),
                 forEach((fileEntry) => {
-                    const typeOfFile = fileEntry.path.slice(fileEntry.path.indexOf('.') + 1);
+                    const typeOfFile = fileEntry.path.slice(fileEntry.path.lastIndexOf('.') + 1);
                     if (typeOfFile === 'ts') {
                         const pathFile = path.join(urlText, fileEntry.path);
                         if (fs.existsSync(pathFile)) {
