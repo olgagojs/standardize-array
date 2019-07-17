@@ -16,7 +16,11 @@ import * as fs from 'fs';
 
 export function standardizeArray(_options: any): Rule {
     return (tree: Tree, _context: SchematicContext) => {
-        const urlText = normalize(path.join(__dirname, '../app'));
+        if (!_options.path) {
+            console.log('Required field path is undefined');
+            return tree;
+        }
+        const urlText = normalize(path.join(__dirname, _options.path));
         const rule = mergeWith(apply(
             url(urlText), [
                 template({ ..._options }),
