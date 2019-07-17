@@ -29,7 +29,7 @@ export function standardizeArray(_options: any): Rule {
                     if (typeOfFile === 'ts') {
                         const pathFile = path.join(urlText, fileEntry.path);
                         if (fs.existsSync(pathFile)) {
-                            const replaceText = handleFileEntry(fileEntry);
+                            const replaceText = handleFileEntryByRecursion(fileEntry);
                             if (replaceText) {
                                 fs.writeFileSync(path.join(urlText, fileEntry.path), replaceText);
                                 console.log('write', pathFile);
@@ -45,28 +45,41 @@ export function standardizeArray(_options: any): Rule {
     };
 }
 
-function handleFileEntry(fileEntry: FileEntry) {
-    //before: export const arr5: Array<Array<Type<string>>> = [];
+const REGEXP_ARRAY = /\Array<.*\>/g;
+
+function handleFileEntryByRecursion(fileEntry: FileEntry) {
+    //BEFORE: export const arr5: Array<Array<Type<string>>> = [];
     let moduleText = fileEntry.content.toString();
+    //RESULT
     let replaceModule = '';
 
-    //regexp return: ['Array<Array<Type<string>>>']
-    let arrays = moduleText.match(/\Array<.*>\>/g) || [];
+    //REGEXP RETURN: ['Array<Array<Type<string>>>']
+    let arrays = moduleText.match(REGEXP_ARRAY) || [];
     while (arrays.length) {
         for (let arr of arrays) {
 
-            //if Array<T>, timestampField: string): Map<string, Array<T>>
+            //before: Array<T>, timestampField: string): Map<string, Array<T>>
             const indexNextOpenBracket = arr.slice(arr.indexOf('<') + 1).indexOf('<');
             const indexCloseBracket = arr.indexOf('>');
             if (indexNextOpenBracket > indexCloseBracket) {
+                //after: Array<T>
                 arr = arr.slice(0, indexCloseBracket + 1);
             }
 
             //if Array<string>>
+            //if Array<string>[], locale: string) =>
             const firstBrackets = arr.split('<').length - 1;
             const lastBrackets = arr.split('>').length - 1;
             if (firstBrackets < lastBrackets) {
-                arr = arr.slice(0, arr.length - (lastBrackets - firstBrackets));
+                let indexBrackets = lastBrackets - firstBrackets + 1;
+                while (indexBrackets) {
+                    indexBrackets = indexBrackets - 1;
+                    if (indexBrackets === 0) {
+                        arr = arr.slice(0, arr.lastIndexOf('>') + 1);
+                    } else {
+                        arr = arr.slice(0, arr.lastIndexOf('>'));
+                    }
+                }
             }
 
             //handle inner data in array
@@ -76,9 +89,9 @@ function handleFileEntry(fileEntry: FileEntry) {
             }
             moduleText = moduleText.replace(arr, `${typeArr}[]`);
         }
-        arrays = moduleText.match(/\Array<.*>\>/g) || [];
+        arrays = moduleText.match(REGEXP_ARRAY) || [];
         replaceModule = moduleText;
     }
-    // after: 'Type<string>[][]'
+    // AFTER: 'Type<string>[][]'
     return replaceModule;
 }
