@@ -60,7 +60,8 @@ function handleFileEntry(fileEntry: FileEntry) {
                 typeText = `(${typeText})`;
             }
             const replaceText = `${typeText}[]`;
-            replaceModule = moduleText.replace(searchTextArray, replaceText);
+            moduleText = moduleText.replace(searchTextArray, replaceText);
+            replaceModule = moduleText;
             // console.log('Before: ');
             // console.log(moduleText);
             // console.log('After: ');
