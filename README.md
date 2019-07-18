@@ -1,4 +1,4 @@
-#  Standardize Array: from Array<string> to string[]
+#  Standardize Array: from Array to []
 ### Commands:
 
 ```bash
