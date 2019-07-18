@@ -1,3 +1,13 @@
+# Standardize Array: from Array<string> to string[]
+### Commands:
+```bash
+npm run build
+```
+
+```bash
+schematics .:standardize-array --path="/path to your app for changes"
+```
+
 # Getting Started With Schematics
 
 This repository is a basic Schematic implementation that serves as a starting point to create and publish Schematics to NPM.
