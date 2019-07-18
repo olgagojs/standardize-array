@@ -1,5 +1,10 @@
 # Standardize Array: from Array<string> to string[]
 ### Commands:
+
+```bash
+npm install
+```
+
 ```bash
 npm run build
 ```
